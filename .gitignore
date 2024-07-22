@@ -2,3 +2,6 @@
 /*.png
 /*.jfif
 /*.jpeg
+
+# Archivos temporales
+__pycache__
