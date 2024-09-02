@@ -36,7 +36,7 @@ class TestPixelArtConverter(unittest.TestCase):
         converter = PixelArtConverter(ColorMatcher())
         pixel_art = converter.convert_to_pixel_art('Test/i2.jpeg', 'Palette/16/na16.png', 10)
         self.assertIsInstance(pixel_art, Image.Image)
-        self.assertEqual(pixel_art.size, (730, 920))  # Suponiendo una imagen de entrada de 100x100
+        self.assertEqual(pixel_art.size, (730, 920))  # Suponiendo una imagen de entrada de 730x920 (como la imagen de entrada)
 
 
 if __name__ == '__main__':
