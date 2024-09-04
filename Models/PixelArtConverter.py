@@ -3,6 +3,7 @@ import numpy as np
 
 from Models.PaletteLoader import PaletteLoader
 from Models.ColorMatcher import ColorMatcher
+from Models.ImageProcessor import ImageProcessor
 
 class PixelArtConverter:
     """Class to convert images to pixel art using a specified color palette."""
@@ -15,6 +16,7 @@ class PixelArtConverter:
             color_matcher (ColorMatcher): An object that has a method find_closest_color.
         """
         self.color_matcher = color_matcher
+        self.image_processor = ImageProcessor
 
 
     def convert_to_pixel_art(self, image_path: str, palette_path: str, pixel_size: int) -> Image:
@@ -35,6 +37,12 @@ class PixelArtConverter:
         try:
             # Load and convert the input image to RGB
             image = Image.open(image_path).convert("RGB")
+
+            # Apply image preprocessing
+            image = self.image_processor.adjust_brightness_contrast(image)
+            image = self.image_processor.desaturate_image(image)
+            image = self.image_processor.apply_dithering(image)
+
             # Load the palette
             palette = PaletteLoader.load_palette(palette_path)
 
