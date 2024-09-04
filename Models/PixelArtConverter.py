@@ -19,7 +19,7 @@ class PixelArtConverter:
         self.image_processor = ImageProcessor
 
 
-    def convert_to_pixel_art(self, image_path: str, palette_path: str, pixel_size: int) -> Image:
+    def convert_to_pixel_art(self, image_path: str, palette_path: str, pixel_size: int, options:dict) -> Image:
         """
         Convert an image to pixel art using the specified palette and pixel size.
 
@@ -39,9 +39,11 @@ class PixelArtConverter:
             image = Image.open(image_path).convert("RGB")
 
             # Apply image preprocessing
-            image = self.image_processor.adjust_brightness_contrast(image)
-            image = self.image_processor.desaturate_image(image)
-            image = self.image_processor.apply_dithering(image)
+            image = self.image_processor.adjust_brightness_contrast(image, options['brightness'], options['contrast'])
+            if options['desaturate']:
+                image = self.image_processor.desaturate_image(image)
+            if options['dithering']:
+                image = self.image_processor.apply_dithering(image)
 
             # Load the palette
             palette = PaletteLoader.load_palette(palette_path)
@@ -59,6 +61,8 @@ class PixelArtConverter:
             # Convert the NumPy array back to an Image object
             pixel_art_image = Image.fromarray(image_array.astype('uint8'))
             return pixel_art_image
+        except FileNotFoundError:
+            raise ValueError(f"No such file or directory: {image_path}")
         except Exception as e:
             raise ValueError(f"An error occurred while converting to pixel art: {e}")
 
