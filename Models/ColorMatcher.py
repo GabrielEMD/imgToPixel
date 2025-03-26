@@ -1,6 +1,10 @@
+
 import numpy as np
+from PIL import Image
 from colormath.color_objects import LabColor, sRGBColor
 from colormath.color_conversions import convert_color
+
+from Models.QuantizationMethod import QuantizationMethod
 
 class ColorMatcher:
     """Class to find the closest color in a palette."""
@@ -25,12 +29,12 @@ class ColorMatcher:
         return np.sqrt(np.sum((color_lab1 - color_lab2) ** 2))
 
 
-    def find_closest_color(self, color: tuple[int, int, int], palette: np.ndarray) -> np.ndarray:
+    def find_closest_color(self, color: np.ndarray, palette: np.ndarray) -> np.ndarray:
         """
         Find the closest color in the palette to the given color.
 
         Args:
-            color (tuple): RGB color to match.
+            color (np.ndarray): RGB color to match.
             palette (np.ndarray): Array of RGB colors.
 
         Returns:
@@ -63,3 +67,24 @@ class ColorMatcher:
         # Cache the result
         self.color_cache[tuple(color)] = closest_color
         return closest_color
+
+
+    @staticmethod
+    def quantize_image(image: np.ndarray, method: str, num_colors: int) -> np.ndarray:
+        """
+        Apply a quantization method to the image.
+
+        Args:
+            image (np.ndarray): Input image.
+            method (str): Quantization method ('kmeans' or 'median_cut').
+            num_colors (int): Number of colors to reduce to.
+
+        Returns:
+            np.ndarray: Quantized image.
+        """
+        if method == "kmeans":
+            return QuantizationMethod.apply_kmeans(image, num_colors)
+        elif method == "median_cut":
+            return np.array(QuantizationMethod.apply_median_cut(Image.fromarray(image), num_colors))
+        else:
+            raise ValueError("Invalid quantization method. Use 'kmeans' or 'median_cut'.")

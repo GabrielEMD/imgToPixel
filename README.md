@@ -9,6 +9,7 @@ PixelArtConverter es una herramienta para convertir imágenes a arte pixelado ut
 - **`PixelArtConverter.py`**: Contiene la lógica para convertir imágenes a pixel art utilizando una paleta de colores.
 - **`ImageProcessor.py`**: Proporciona funciones para ajustar el brillo, el contraste, la desaturación y aplicar dithering a las imágenes.
 - **`ColorMatcher.py`**: Encuentra el color más cercano en una paleta utilizando el espacio de color LAB.
+- **`QuantizationMethod.py`**: Da un valor cuantitativo a los colores para realizar un suavizado en la imagen.
 
 ## Requisitos
 
@@ -16,11 +17,12 @@ PixelArtConverter es una herramienta para convertir imágenes a arte pixelado ut
 - Pillow (PIL fork)
 - numpy
 - colormath
+- sklearn
 
 Puedes instalar las dependencias necesarias utilizando `pip`:
 
 ```bash
-pip install pillow numpy colormath
+pip install pillow numpy colormath scikit-learn
 ```
 
 ## Uso
@@ -40,8 +42,10 @@ python main.py path/to/your/image.png -p Palette/64/aap-64.png -s 10 -o path/to/
 * `-b` o `--brightness`: Factor de brillo (por defecto: 1.0).
 * `-c` o `--contrast`: Factor de contraste (por defecto: 1.0).
 * `-o` o `--output`: Ruta para guardar la imagen de pixel art resultante.
+* `-q` o `--quantization_method`: Metodo de caracterización cuantitativa kmeans, median_cut o ninguna.
 * `--desaturate`: Desaturar la imagen después del procesamiento.
 * `--dithering`: Aplicar dithering Floyd-Steinberg a la imagen después del procesamiento.
+* `--grayscale`: Aplica un escalado de grises a la imagen temporalmente para aplicar en paletas pequeñas.
 
 ### Listar paletas disponibles
 
@@ -54,7 +58,9 @@ python main.py --list-palettes
 ### Estructura de Archivos
 
 * `Palette/`: Directorio que contiene las imágenes de paletas de colores.
+* * `Palette/4/`: Paletas con 4 colores.
+* * `Palette/8/`: Paletas con 8 colores.
 * * `Palette/16/`: Paletas con 16 colores.
 * * `Palette/64/`: Paletas con 64 colores.
-* * `Palette/4/`: Paletas con 4 colores.
 * `Models/`: Directorio que contiene los módulos de procesamiento de imágenes y manejo de paletas.
+* `Test/`: Directorio que contiene una imagen para la ejecución de pruebas.

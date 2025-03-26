@@ -1,3 +1,4 @@
+
 from Models.ColorMatcher import ColorMatcher
 from Models.PixelArtConverter import PixelArtConverter
 
@@ -55,6 +56,7 @@ def list_palettes(directory:str) -> None:
 
 
 def process_image(args):
+    """Send parameters and execute the conversion"""
     try:
         image_path = args.image
         palette_path = args.palette
@@ -63,12 +65,14 @@ def process_image(args):
             'brightness': args.brightness,
             'contrast': args.contrast,
             'desaturate': args.desaturate,
-            'dithering': args.dithering
+            'dithering': args.dithering,
+            'grayscale': args.grayscale,
+            'quantization_method': args.quantization_method,
         }
         output = output_file(args.output, args.image)
 
-        converter = PixelArtConverter(ColorMatcher())
-        pixel_art_image = converter.convert_to_pixel_art(image_path, palette_path, pixel_size, options)
+        converter = PixelArtConverter(ColorMatcher(), palette_path)
+        pixel_art_image = converter.convert_to_pixel_art(image_path, pixel_size, options)
         pixel_art_image.save(output)
     except ValueError as e:
         print(e)
@@ -87,8 +91,10 @@ def main():
     parser.add_argument('-b', '--brightness', type=float, default=1.0, help='Brightness factor (default: 1.0).')
     parser.add_argument('-c', '--contrast', type=float, default=1.0, help='Contrast factor (default: 1.0).')
     parser.add_argument('-o', '--output', type=str, default='', help='Path to save the output pixel art image.')
+    parser.add_argument('-q', '--quantization_method', type=str, default='', help='Quantitative characterization method kmeans, median_cut or none.')
     parser.add_argument('--desaturate', type=bool, default=False, help='Desaturate the image after process.')
     parser.add_argument('--dithering', type=bool, default=False, help='Apply Floyd-Steinberg dithering to the image after process.')
+    parser.add_argument('--grayscale', type=bool, default=False, help='Temporarily applies grayscale to the image for application in small palettes.')
 
     # Agregar el argumento para listar las paletas disponibles
     parser.add_argument("--list-palettes", action="store_true", help="List available palettes.")
